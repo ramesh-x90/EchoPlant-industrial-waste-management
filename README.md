@@ -5,9 +5,7 @@
 ```javascript
 {
     onload : function() {
-        // alert("onload");
-        // this.setMarkdown("### onloaded");
-        // console.log("onload =>", this, this.id, this.settings);
+        alert("onload");
     }
 }
 ```
