@@ -51,4 +51,4 @@
 
 # High level system design
 
-<img src="/demo/image1.png"/>
+<img src="Doc/Architecture/highLevelDesign.jpg"/>
