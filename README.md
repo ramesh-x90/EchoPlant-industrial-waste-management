@@ -4,6 +4,27 @@
 
 ## Features
 
+auth - auth0
+
+register/login industries
+register/login transport services
+register/login recycling plants
+register/login buyers
+
+register waste package to recycled
+information about extraction time and info
+store waste in the warehouse if recyclers are at max capacity
+
+extract raw mats from recycling plants
+
+order residual materials before recycling
+give delivery info
+
+buy recycled raw mats
+give delivery info
+
+distribute the waste to the recycling plants according to their capacity
+
 ## task list
 
 - [x] design
@@ -19,13 +40,11 @@
     - [ ]
     - [ ]
     - [ ]
-  - [ ] develop the presentation layer / UI (react)
+  - [ ] develop the presentation layer / UI (react.js)
     - [ ]
     - [ ]
     - [ ]
 - [ ] setup environment
   - [ ] configuer cloud environment
-  - [ ] setup
+  - [ ] setup domain
   - [ ] setup ssl
-
-## 😀
