@@ -48,3 +48,7 @@
   - [ ] configuer cloud environment
   - [ ] setup domain
   - [ ] setup ssl
+
+# High level system design
+
+<img src="/demo/image1.png"/>
