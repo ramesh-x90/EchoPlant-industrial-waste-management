@@ -33,17 +33,17 @@
   - [ ] design ui with figma
 - [ ] development
   - [ ] develop the data layer (prisma js)
-    - [ ]
-    - [ ]
-    - [ ]
+    - [ ] task 1
+    - [ ] task 2
+    - [ ] task 3
   - [ ] develop the application layer (node.js + express.js)
-    - [ ]
-    - [ ]
-    - [ ]
+    - [ ] task 1
+    - [ ] task 2
+    - [ ] task 3
   - [ ] develop the presentation layer / UI (react.js)
-    - [ ]
-    - [ ]
-    - [ ]
+    - [ ] task 1
+    - [ ] task 2
+    - [ ] task 3
 - [ ] setup environment
   - [ ] configuer cloud environment
   - [ ] setup domain
