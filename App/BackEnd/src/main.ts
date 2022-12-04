@@ -20,7 +20,7 @@ async function bootstrap() {
     .addServer( `${host}:${port}`  , "Echo-Plant REST api")
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('docs', app, document);
 
   await app.listen(port);
   console.log(`Server is running : ${await app.getUrl()}`)
