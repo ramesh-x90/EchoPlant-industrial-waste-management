@@ -1,0 +1,436 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// user 
+
+model User {
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
+  firstName String
+  lastName  String
+  active    Boolean @default(false)
+  verified  Boolean @default(false)
+
+  role   Role? @relation(fields: [roleId], references: [id])
+  roleId Int?
+
+  profile Profile? @relation(fields: [profileId], references: [id])
+
+  Industry_admin_to_user         Industry_admin_to_user[]
+  Industry_stuff_to_user         Industry_stuff_to_user[]
+  Recycler_admin_to_user         Recycler_admin_to_user[]
+  Recycler_stuff_to_user         Recycler_stuff_to_user[]
+  TransportService_admin_to_user TransportService_admin_to_user[]
+  TransportService_stuff_to_user TransportService_stuff_to_user[]
+  WareHouse_admin_to_user        WareHouse_admin_to_user[]
+  WareHouse_stuff_to_user        WareHouse_stuff_to_user[]
+
+  profileId                           Int?
+  WareHouseToBuyersRawMatTransportJob WareHouseToBuyersRawMatTransportJob[]
+  WareHouseToBuerResidualTransportJob WareHouseToBuerResidualTransportJob[]
+  RawMatOrder                         RawMatOrder[]
+  ResidualOrder                       ResidualOrder[]
+
+  @@unique([firstName, lastName])
+}
+
+model Profile {
+  id      Int    @id @default(autoincrement())
+  image   String
+  address String
+  User    User[]
+}
+
+model Role {
+  id    Int    @id @default(autoincrement())
+  role  String @unique @default("USER")
+  users User[]
+}
+
+model RawMatOrder {
+  id                                  Int                                  @id @default(autoincrement())
+  buyer                               User                                 @relation(fields: [userId], references: [id])
+  userId                              Int
+  category                            RawMaterialCategory                  @relation(fields: [rawMaterialCategoryId], references: [id])
+  rawMaterialCategoryId               Int
+  quantity                            Float
+  WareHouseToBuyersRawMatTransportJob WareHouseToBuyersRawMatTransportJob?
+}
+
+model ResidualOrder {
+  id                                  Int                                  @id @default(autoincrement())
+  buyer                               User                                 @relation(fields: [userId], references: [id])
+  userId                              Int
+  category                            WasteCategory                        @relation(fields: [categoryId], references: [id])
+  categoryId                          Int
+  quantity                            Float
+  RawmatOrder_to_rawMat_package       RawmatOrder_to_rawMat_package[]
+  WareHouseToBuerResidualTransportJob WareHouseToBuerResidualTransportJob?
+}
+
+model RawmatOrder_to_rawMat_package {
+  id                   Int                @id @default(autoincrement())
+  order                ResidualOrder      @relation(fields: [residualOrderId], references: [id])
+  rawMatPackage        RawMaterialPackage @relation(fields: [rawMaterialPackageId], references: [id])
+  rawMaterialPackageId Int
+  residualOrderId      Int
+
+  @@unique([rawMaterialPackageId, residualOrderId])
+}
+
+model ResidualOrder_to_package {
+  id                                    Int                                 @id @default(autoincrement())
+  warehouseToBuyerResidualTransportJob  WareHouseToBuerResidualTransportJob @relation(fields: [wareHouseToBuerResidualTransportJobId], references: [id])
+  package                               WastePackage                        @relation(fields: [wastePackageId], references: [id])
+  wareHouseToBuerResidualTransportJobId Int
+  wastePackageId                        Int
+
+  @@unique([wareHouseToBuerResidualTransportJobId, wastePackageId])
+}
+
+// user 
+
+//industry
+
+model Industry {
+  id                        Int                         @id @default(autoincrement())
+  name                      String                      @unique
+  address                   String
+  contact                   String
+  verified                  Boolean                     @default(false)
+  Industry_admin_to_user    Industry_admin_to_user[]
+  Industry_stuff_to_user    Industry_stuff_to_user[]
+  idustryWastePickupRequest IdustryWastePickupRequest[]
+}
+
+model Industry_admin_to_user {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  industry   Industry @relation(fields: [industryId], references: [id])
+  industryId Int
+  assigned   DateTime @default(now())
+
+  @@unique([userId, industryId])
+}
+
+model Industry_stuff_to_user {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  industry   Industry @relation(fields: [industryId], references: [id])
+  industryId Int
+  assigned   DateTime @default(now())
+
+  @@unique([userId, industryId])
+}
+
+model IdustryWastePickupRequest {
+  id                              Int                              @id @default(autoincrement())
+  createdDate                     DateTime                         @default(now())
+  canceled                        Boolean                          @default(false)
+  picked                          Boolean                          @default(false)
+  Industry                        Industry                         @relation(fields: [industryId], references: [id])
+  industryId                      Int
+  IndustryToWareHouseTransportJob IndustryToWareHouseTransportJob?
+  IndustryToRecyclerTransportJob  IndustryToRecyclerTransportJob?
+}
+
+//industry
+
+//recycler
+
+model Recycler {
+  id                              Int                               @id @default(autoincrement())
+  name                            String                            @unique
+  address                         String
+  contact                         String
+  verified                        Boolean                           @default(false)
+  Recycler_admin_to_user          Recycler_admin_to_user[]
+  Recycler_stuff_to_user          Recycler_stuff_to_user[]
+  RecyclerAcceptedWaste           RecyclerAcceptedWaste[]
+  IndustryToRecyclerTransportJob  IndustryToRecyclerTransportJob[]
+  WareHouseToRecyclerTransportJob WareHouseToRecyclerTransportJob[]
+  RecyclerToWareHouseTransportJob RecyclerToWareHouseTransportJob[]
+}
+
+model Recycler_admin_to_user {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  recycler   Recycler @relation(fields: [recyclerId], references: [id])
+  recyclerId Int
+  assigned   DateTime @default(now())
+
+  @@unique([userId, recyclerId])
+}
+
+model Recycler_stuff_to_user {
+  id         Int      @id @default(autoincrement())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  recycler   Recycler @relation(fields: [recyclerId], references: [id])
+  recyclerId Int
+  assigned   DateTime @default(now())
+
+  @@unique([userId, recyclerId])
+}
+
+model RecyclerAcceptedWaste {
+  recycler  Recycler @relation(fields: [recylerId], references: [id])
+  recylerId Int
+
+  wasteCategory   WasteCategory @relation(fields: [wasteCategoryId], references: [id])
+  wasteCategoryId Int
+
+  @@id([recylerId, wasteCategoryId])
+}
+
+//recycler
+
+//transportService
+
+model TransportService {
+  id                             Int                              @id @default(autoincrement())
+  name                           String                           @unique
+  address                        String
+  contact                        String
+  verified                       Boolean                          @default(false)
+  TransportService_admin_to_user TransportService_admin_to_user[]
+  TransportService_stuff_to_user TransportService_stuff_to_user[]
+
+  carriers Carrier[]
+}
+
+model TransportService_admin_to_user {
+  id                 Int              @id @default(autoincrement())
+  user               User             @relation(fields: [userId], references: [id])
+  userId             Int
+  transportService   TransportService @relation(fields: [transportServiceId], references: [id])
+  transportServiceId Int
+  assigned           DateTime         @default(now())
+
+  @@unique([userId, transportServiceId])
+}
+
+model TransportService_stuff_to_user {
+  id                 Int              @id @default(autoincrement())
+  user               User             @relation(fields: [userId], references: [id])
+  userId             Int
+  transportService   TransportService @relation(fields: [transportServiceId], references: [id])
+  transportServiceId Int
+  assigned           DateTime         @default(now())
+  CarrierOwer        CarrierOwer?
+
+  @@unique([userId, transportServiceId])
+}
+
+model Carrier {
+  id                                  Int                                   @id @default(autoincrement())
+  capacity                            Float
+  type                                Int
+  TransportService                    TransportService                      @relation(fields: [transportServiceId], references: [id])
+  transportServiceId                  Int
+  CarrierOwer                         CarrierOwer?
+  IndustryToWareHouseTransportJob     IndustryToWareHouseTransportJob[]
+  IndustryToRecyclerTransportJob      IndustryToRecyclerTransportJob[]
+  WareHouseToRecyclerTransportJob     WareHouseToRecyclerTransportJob[]
+  RecyclerToWareHouseTransportJob     RecyclerToWareHouseTransportJob[]
+  WareHouseToBuyersRawMatTransportJob WareHouseToBuyersRawMatTransportJob[]
+  WareHouseToBuerResidualTransportJob WareHouseToBuerResidualTransportJob[]
+}
+
+model CarrierOwer {
+  id        Int                            @id @default(autoincrement())
+  carrier   Carrier                        @relation(fields: [carrierId], references: [id])
+  carrierId Int                            @unique
+  stuff     TransportService_stuff_to_user @relation(fields: [stuffId], references: [id])
+  stuffId   Int                            @unique
+}
+
+model IndustryToWareHouseTransportJob {
+  id                          Int                       @id @default(autoincrement())
+  warehouse                   WareHouse                 @relation(fields: [wareHouseId], references: [id])
+  wareHouseId                 Int
+  carrier                     Carrier                   @relation(fields: [carrierId], references: [id])
+  carrierId                   Int
+  request                     IdustryWastePickupRequest @relation(fields: [idustryWastePickupRequestId], references: [id])
+  idustryWastePickupRequestId Int                       @unique
+  completed                   Boolean                   @default(false)
+}
+
+model IndustryToRecyclerTransportJob {
+  id                          Int                       @id @default(autoincrement())
+  recycler                    Recycler                  @relation(fields: [recyclerId], references: [id])
+  recyclerId                  Int
+  carrier                     Carrier                   @relation(fields: [carrierId], references: [id])
+  carrierId                   Int
+  request                     IdustryWastePickupRequest @relation(fields: [idustryWastePickupRequestId], references: [id])
+  idustryWastePickupRequestId Int                       @unique
+  completed                   Boolean                   @default(false)
+}
+
+model WareHouseToRecyclerTransportJob {
+  id                                Int                                 @id @default(autoincrement())
+  warehouse                         WareHouse                           @relation(fields: [wareHouseId], references: [id])
+  wareHouseId                       Int
+  recycler                          Recycler                            @relation(fields: [recyclerId], references: [id])
+  recyclerId                        Int
+  completed                         Boolean                             @default(false)
+  carrier                           Carrier                             @relation(fields: [carrierId], references: [id])
+  carrierId                         Int
+  WareHouse2RecyclerJob_to_packages WareHouse2RecyclerJob_to_packages[]
+}
+
+model RecyclerToWareHouseTransportJob {
+  id                                Int                                 @id
+  recycler                          Recycler                            @relation(fields: [recyclerId], references: [id])
+  recyclerId                        Int
+  warehouse                         WareHouse                           @relation(fields: [wareHouseId], references: [id])
+  wareHouseId                       Int
+  carrier                           Carrier                             @relation(fields: [carrierId], references: [id])
+  carrierId                         Int
+  completed                         Boolean                             @default(false)
+  Recycler2WareHouseJob_to_packages Recycler2WareHouseJob_to_packages[]
+}
+
+model WareHouseToBuyersRawMatTransportJob {
+  id            Int         @id @default(autoincrement())
+  buyer         User        @relation(fields: [userId], references: [id])
+  userId        Int
+  carrier       Carrier     @relation(fields: [carrierId], references: [id])
+  carrierId     Int
+  completed     Boolean     @default(false)
+  order         RawMatOrder @relation(fields: [rawMatOrderId], references: [id])
+  rawMatOrderId Int         @unique
+}
+
+model WareHouseToBuerResidualTransportJob {
+  id        Int       @id
+  warehouse WareHouse @relation(fields: [wareHouseId], references: [id])
+  buyer     User      @relation(fields: [userId], references: [id])
+  carrier   Carrier   @relation(fields: [carrierId], references: [id])
+  completed Boolean   @default(false)
+
+  wareHouseId              Int
+  userId                   Int
+  carrierId                Int
+  order                    ResidualOrder              @relation(fields: [residualOrderId], references: [id])
+  residualOrderId          Int                        @unique
+  ResidualOrder_to_package ResidualOrder_to_package[]
+}
+
+model WareHouse2RecyclerJob_to_packages {
+  id                                Int                             @id @default(autoincrement())
+  wareHouseToRecyclerTransportJob   WareHouseToRecyclerTransportJob @relation(fields: [wareHouseToRecyclerTransportJobId], references: [id])
+  wareHouseToRecyclerTransportJobId Int
+  package                           WastePackage                    @relation(fields: [wastePackageId], references: [id])
+  wastePackageId                    Int
+}
+
+model Recycler2WareHouseJob_to_packages {
+  id                                Int                             @id @default(autoincrement())
+  recyclerToWarehouseTransportJob   RecyclerToWareHouseTransportJob @relation(fields: [recyclerToWarehouseTransportJobId], references: [id])
+  recyclerToWarehouseTransportJobId Int
+  package                           WastePackage                    @relation(fields: [wastePackageId], references: [id])
+  wastePackageId                    Int
+}
+
+//transportService
+
+//WareHouse
+
+model WareHouse {
+  id                                  Int                                   @id @default(autoincrement())
+  name                                String                                @unique
+  address                             String
+  contact                             String
+  verified                            Boolean                               @default(false)
+  WareHouse_admin_to_user             WareHouse_admin_to_user[]
+  WareHouse_stuff_to_user             WareHouse_stuff_to_user[]
+  Stock                               Stock[]
+  IndustryToWareHouseTransportJob     IndustryToWareHouseTransportJob[]
+  WareHouseToRecyclerTransportJob     WareHouseToRecyclerTransportJob[]
+  RecyclerToWareHouseTransportJob     RecyclerToWareHouseTransportJob[]
+  WareHouseToBuerResidualTransportJob WareHouseToBuerResidualTransportJob[]
+}
+
+model WareHouse_admin_to_user {
+  id          Int       @id @default(autoincrement())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  warehouse   WareHouse @relation(fields: [warehouseId], references: [id])
+  warehouseId Int
+  assigned    DateTime  @default(now())
+
+  @@unique([userId, warehouseId])
+}
+
+model WareHouse_stuff_to_user {
+  id          Int       @id @default(autoincrement())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  warehouse   WareHouse @relation(fields: [warehouseId], references: [id])
+  warehouseId Int
+  assigned    DateTime  @default(now())
+
+  @@unique([userId, warehouseId])
+}
+
+model Stock {
+  id              Int           @id @default(autoincrement())
+  wasteCategory   WasteCategory @relation(fields: [wasteCategoryId], references: [id])
+  wasteCategoryId Int
+  wareHose        WareHouse     @relation(fields: [wareHouseId], references: [id])
+  wareHouseId     Int
+}
+
+//WareHouse
+
+//waste 
+
+model WasteCategory {
+  id                    Int                     @id @default(autoincrement())
+  name                  String
+  RecyclerAcceptedWaste RecyclerAcceptedWaste[]
+  Stock                 Stock[]
+  WastePackage          WastePackage[]
+  ResidualOrder         ResidualOrder[]
+}
+
+model WastePackage {
+  id                                Int                                 @id @default(autoincrement())
+  weight                            Float
+  category                          WasteCategory                       @relation(fields: [wasteCategoryId], references: [id])
+  wasteCategoryId                   Int
+  WareHouse2RecyclerJob_to_packages WareHouse2RecyclerJob_to_packages[]
+  Recycler2WareHouseJob_to_packages Recycler2WareHouseJob_to_packages[]
+  ResidualOrder_to_package          ResidualOrder_to_package[]
+}
+
+//
+
+//raw mat 
+model RawMaterialCategory {
+  id                 Int                  @id @default(autoincrement())
+  name               String               @unique
+  rawMaterialPackage RawMaterialPackage[]
+  RawMatOrder        RawMatOrder[]
+}
+
+model RawMaterialPackage {
+  id                            Int                             @id @default(autoincrement())
+  weight                        Float
+  category                      RawMaterialCategory             @relation(fields: [rawMaterialCategoryId], references: [id])
+  rawMaterialCategoryId         Int
+  RawmatOrder_to_rawMat_package RawmatOrder_to_rawMat_package[]
+}
