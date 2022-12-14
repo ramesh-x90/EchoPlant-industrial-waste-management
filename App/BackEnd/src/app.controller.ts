@@ -4,22 +4,15 @@ import { AppService } from './app.service';
 
 
 
-class Res{
-  @ApiProperty()
-  appName: string
-}
-
-
 @ApiTags('home')
-@Controller()
+@Controller('home')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService) { }
 
   @Get()
-  @ApiOperation({summary: "this is the home" , operationId : "getHello"})
-  // @ApiResponse({status : 200 , description : "home" , type : Res})
-  async getHello() : Promise<any>{
-    return await this.appService.getHello();
+  @ApiOperation({ summary: "this is the home", operationId: "getHello" })
+  async getHello(): Promise<any> {
+    return { message: "hello world..." };
   }
 
 
