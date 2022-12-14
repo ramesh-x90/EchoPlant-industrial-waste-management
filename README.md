@@ -28,14 +28,14 @@
 ## task list
 
 - [x] design
-  - [ ] design Architecture
-  - [ ] design database
+  - [x] design Architecture
+  - [x] design database
   - [ ] design ui with figma
 - [ ] development
-  - [ ] develop the data layer (prisma js)
-    - [ ] task 1
-    - [ ] task 2
-    - [ ] task 3
+  - [x] develop the data layer (prisma js)
+    - [x] task 1
+    - [x] task 2
+    - [x] task 3
   - [ ] develop the application layer (node.js + express.js)
     - [ ] task 1
     - [ ] task 2
