@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { AuthService } from 'src/users/auth/auth.service';
 import { CreateTransportServiceDto } from './dto/create-transport-service.dto';
 import { UpdateTransportServiceDto } from './dto/update-transport-service.dto';
 

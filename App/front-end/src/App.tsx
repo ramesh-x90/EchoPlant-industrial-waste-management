@@ -3,11 +3,37 @@
 // import "./App.css";
 
 function App() {
+  const responseGoogle = (res: any = { error: "failed" }) => {
+    console.dir(res);
+  };
+
+  const login = () => {
+    const dw = window.screen.width;
+    const dh = window.screen.height;
+
+    const windowWidth = dh / 2;
+    const windowHeight = dh / 2;
+
+    const top = (dh - windowHeight) / 2;
+    const right = (dw - windowWidth) / 2;
+
+    const loginWindow = window.open(
+      "https://accounts.google.com/o/oauth2/auth?redirect_uri=http://localhost:4000/api/users/auth/google&client_id=963758742959-1eg7o6ikdfif17q6niibmad1drlllkes.apps.googleusercontent.com&access_type=offline&response_type=code&prompt=consent&scope=https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
+      "Echo-Plant | Google Auth",
+      `toolbar=yes,scrollbars=yes,resizable=yes,top=${top},left=${right},width=${windowWidth},height=${windowHeight}`
+    );
+
+    const handler = setInterval(() => {
+      // if(loginWindow.){
+      //   clearInterval(handler);
+      // }
+    }, 1000);
+  };
+
   return (
     <div className="App ">
-      <header className="App-header ">
-        <a href="http://localhost:4000/api/auth/google/signIn">SignIn</a>
-      </header>
+      <button onClick={login}>GOOGLE</button>
+      <br />
     </div>
   );
 }
