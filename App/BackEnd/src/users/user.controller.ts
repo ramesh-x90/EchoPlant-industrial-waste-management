@@ -1,17 +1,28 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode, ConflictException, BadRequestException } from '@nestjs/common';
+import {
+  Controller, Get, Post, Body, Patch, Param, Delete,
+  ConflictException, BadRequestException, UseGuards,
+  Req, Res
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UniqueKeyConstraintViolationException } from 'src/common/Exceptions/service-layer/UniqueKeyConstraintViolation';
 import { InvalidDataException } from 'src/common/Exceptions/service-layer/InvalidDataError';
-import { } from '@nestjs/core'
+import { Request, Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
+import { AuthService } from 'src/auth/auth.service';
+import { UserProfile } from 'src/auth/interfaces/userProfile.interface.';
+import { AppConfigService } from 'src/common/config/app.config.service';
 
 
-@ApiTags('users')
-@Controller('users')
+@ApiTags('api/users')
+@Controller('api/users')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+    private readonly appConfigService: AppConfigService) { }
 
 
   @ApiResponse({ status: 409, description: "Unique Key Constraint Violation." })
@@ -31,28 +42,10 @@ export class UserController {
   }
 
 
-  @ApiOperation({ description: "create user with google auth" })
-  @Post('auth/google')
-  async createViaGoogleAuth() {
-    try {
-      return await this.userService.create({
-        email: '',
-        firstName: '',
-        lastName: '',
-        password: ''
-      });
-    } catch (error) {
-      if (error instanceof UniqueKeyConstraintViolationException) {
-        throw new ConflictException(error.message)
-      }
-      if (error instanceof InvalidDataException) {
-        throw new BadRequestException(error.message)
-      }
-    }
-  }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get()
-  async findAll() {
+  async findAll(@Req() req: Request) {
     return await this.userService.findAll();
   }
 

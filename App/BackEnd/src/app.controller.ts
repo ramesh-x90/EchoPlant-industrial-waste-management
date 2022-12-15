@@ -4,8 +4,8 @@ import { AppService } from './app.service';
 
 
 
-@ApiTags('home')
-@Controller('home')
+@ApiTags('api/home')
+@Controller('api/home')
 export class AppController {
   constructor(private readonly appService: AppService) { }
 

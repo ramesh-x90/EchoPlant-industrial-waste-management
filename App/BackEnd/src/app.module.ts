@@ -11,11 +11,15 @@ import { CarrierOwnersModule } from './transport-services/carrier-owners/carrier
 import { WasteModule } from './waste/waste.module';
 import { RawMaterialsModule } from './raw-materials/raw-materials.module';
 import { PrismaModuleModule } from './common/prisma-module/prisma-module.module';
-import { AuthModule } from './users/auth/auth.module';
 import { AppConfig } from './common/config/config.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [UserModule,
+  imports: [
+    AuthModule,
+
+
+    UserModule,
     RoleModule,
     StoreModule,
     IndustryModule,
@@ -25,10 +29,10 @@ import { AppConfig } from './common/config/config.module';
     WasteModule,
     RawMaterialsModule,
     PrismaModuleModule,
-    AuthModule,
 
     // application configuration module
-    AppConfig
+    AppConfig,
+
   ],
 
   controllers: [AppController],

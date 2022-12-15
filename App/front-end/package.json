@@ -2,7 +2,9 @@
   "name": "front-end",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:4000",
   "dependencies": {
+    "@react-oauth/google": "^0.5.1",
     "@splinetool/react-spline": "^2.2.3",
     "@splinetool/runtime": "^0.9.130",
     "@testing-library/jest-dom": "^5.16.5",
