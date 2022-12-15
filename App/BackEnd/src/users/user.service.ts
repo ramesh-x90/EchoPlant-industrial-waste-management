@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaClientKnownRequestError, PrismaClientValidationError } from '@prisma/client/runtime';
 import { UniqueKeyConstraintViolationException } from 'src/common/Exceptions/service-layer/UniqueKeyConstraintViolation';
 import { PrismaService } from 'src/common/prisma-module/prisma.service';
-import { AuthService } from './auth/auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 

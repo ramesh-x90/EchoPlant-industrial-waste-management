@@ -18,16 +18,25 @@ function App() {
     const right = (dw - windowWidth) / 2;
 
     const loginWindow = window.open(
-      "https://accounts.google.com/o/oauth2/auth?redirect_uri=http://localhost:4000/api/users/auth/google&client_id=963758742959-1eg7o6ikdfif17q6niibmad1drlllkes.apps.googleusercontent.com&access_type=offline&response_type=code&prompt=consent&scope=https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
+      "https://accounts.google.com/o/oauth2/auth?redirect_uri=http://localhost/api/auth/google&client_id=963758742959-1eg7o6ikdfif17q6niibmad1drlllkes.apps.googleusercontent.com&access_type=offline&response_type=code&prompt=consent&scope=https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
       "Echo-Plant | Google Auth",
       `toolbar=yes,scrollbars=yes,resizable=yes,top=${top},left=${right},width=${windowWidth},height=${windowHeight}`
     );
 
     const handler = setInterval(() => {
-      // if(loginWindow.){
-      //   clearInterval(handler);
-      // }
+      if (window.localStorage.getItem("loginDone")) {
+        clearInterval(handler);
+        window.localStorage.removeItem("loginDone");
+        setTimeout(() => {
+          loginWindow?.close();
+        }, 1000 * 20);
+      }
     }, 1000);
+
+    setTimeout(() => {
+      clearInterval(handler);
+      loginWindow?.close();
+    }, 60 * 2 * 1000);
   };
 
   return (

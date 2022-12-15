@@ -4,17 +4,18 @@ import { config } from 'dotenv';
 
 import { Injectable } from '@nestjs/common';
 import { UserProfile } from '../interfaces/userProfile.interface.';
+import { AppConfigService } from 'src/common/config/app.config.service';
 
 config();
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
-    constructor() {
+    constructor(private readonly appConfigService: AppConfigService) {
         super({
-            clientID: "963758742959-1eg7o6ikdfif17q6niibmad1drlllkes.apps.googleusercontent.com",
-            clientSecret: "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",
-            callbackURL: 'http://localhost:4000/api/users/auth/google',
+            clientID: appConfigService.getClientID(),
+            clientSecret: appConfigService.getClientSecret(),
+            callbackURL: appConfigService.getRedirectUri(),
             scope: ['email', 'profile'],
         });
     }
